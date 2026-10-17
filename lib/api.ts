@@ -77,3 +77,38 @@ export function getProfile(token: string) {
     },
   });
 }
+
+export interface NearbyVehicle {
+  id: number;
+  driver_id: number;
+  registration_number: string;
+  model: string;
+  capacity: number;
+  latitude: number;
+  longitude: number;
+  distance_km: number;
+}
+
+export interface NearbyVehiclesResponse {
+  status: string;
+  count: number;
+  radius_km: number;
+  vehicles: NearbyVehicle[];
+}
+
+export function getNearbyVehicles(
+  latitude: number,
+  longitude: number,
+  radius = 5
+) {
+  const query = new URLSearchParams({
+    latitude: String(latitude),
+    longitude: String(longitude),
+    radius: String(radius),
+  });
+
+  return apiRequest<NearbyVehiclesResponse>(
+    `/vehicles/nearby?${query.toString()}`,
+    { method: "GET" }
+  );
+}
