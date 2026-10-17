@@ -112,3 +112,40 @@ export function getNearbyVehicles(
     { method: "GET" }
   );
 }
+export interface CreateRideData {
+  pickup_latitude: number;
+  pickup_longitude: number;
+  destination_latitude: number;
+  destination_longitude: number;
+}
+
+export interface Ride {
+  id: number;
+  passenger_id: number;
+  driver_id?: number | null;
+  vehicle_id?: number | null;
+  pickup_latitude: number;
+  pickup_longitude: number;
+  destination_latitude: number;
+  destination_longitude: number;
+  status: string;
+}
+
+export interface CreateRideResponse {
+  status: string;
+  message: string;
+  ride: Ride;
+}
+
+export function createRide(
+  token: string,
+  data: CreateRideData
+) {
+  return apiRequest<CreateRideResponse>("/rides", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+}
