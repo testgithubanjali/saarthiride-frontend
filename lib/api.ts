@@ -3,6 +3,8 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "http://localhost:8080/api";
 
+// -------------------- Authentication --------------------
+
 export interface AuthUser {
   id: number;
   name: string;
@@ -28,6 +30,8 @@ interface LoginData {
   phone: string;
   password: string;
 }
+
+// -------------------- Common API Request --------------------
 
 async function apiRequest<T>(
   endpoint: string,
@@ -78,6 +82,8 @@ export function getProfile(token: string) {
   });
 }
 
+// -------------------- Nearby Vehicles --------------------
+
 export interface NearbyVehicle {
   id: number;
   driver_id: number;
@@ -112,6 +118,9 @@ export function getNearbyVehicles(
     { method: "GET" }
   );
 }
+
+// -------------------- Ride Types --------------------
+
 export interface CreateRideData {
   pickup_latitude: number;
   pickup_longitude: number;
@@ -129,6 +138,8 @@ export interface Ride {
   destination_latitude: number;
   destination_longitude: number;
   status: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface CreateRideResponse {
@@ -136,6 +147,8 @@ export interface CreateRideResponse {
   message: string;
   ride: Ride;
 }
+
+// -------------------- Create Ride --------------------
 
 export function createRide(
   token: string,
@@ -147,5 +160,42 @@ export function createRide(
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
+  });
+}
+
+// -------------------- Ride History --------------------
+
+export interface RideHistoryResponse {
+  status: string;
+  count: number;
+  rides: Ride[];
+}
+
+export function getRideHistory(token: string) {
+  return apiRequest<RideHistoryResponse>("/rides/history", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// -------------------- Cancel Ride --------------------
+
+export interface CancelRideResponse {
+  status: string;
+  message: string;
+  ride: Ride;
+}
+
+export function cancelRide(
+  token: string,
+  rideId: number
+) {
+  return apiRequest<CancelRideResponse>(`/rides/${rideId}/cancel`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
