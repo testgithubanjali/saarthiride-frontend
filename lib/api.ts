@@ -163,12 +163,18 @@ export function createRide(
   });
 }
 
-// -------------------- Ride History --------------------
+ // -------------------- Ride History --------------------
 
 export interface RideHistoryResponse {
   status: string;
-  count: number;
+  message?: string;
   rides: Ride[];
+}
+
+export interface CancelRideResponse {
+  status: string;
+  message: string;
+  ride: Ride;
 }
 
 export function getRideHistory(token: string) {
@@ -180,19 +186,58 @@ export function getRideHistory(token: string) {
   });
 }
 
-// -------------------- Cancel Ride --------------------
-
-export interface CancelRideResponse {
-  status: string;
-  message: string;
-  ride: Ride;
+export function cancelRide(token: string, rideId: number) {
+  return apiRequest<CancelRideResponse>(`/rides/${rideId}/cancel`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
-export function cancelRide(
-  token: string,
-  rideId: number
-) {
-  return apiRequest<CancelRideResponse>(`/rides/${rideId}/cancel`, {
+// -------------------- Driver Ride Management --------------------
+
+export interface DriverRidesResponse {
+  status?: string;
+  message?: string;
+  rides: Ride[];
+}
+
+export interface DriverRideActionResponse {
+  status?: string;
+  message: string;
+  ride?: Ride;
+}
+
+export function getPendingRides(token: string) {
+  return apiRequest<DriverRidesResponse>("/rides/pending", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function acceptRide(token: string, rideId: number) {
+  return apiRequest<DriverRideActionResponse>(`/rides/${rideId}/accept`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function startRide(token: string, rideId: number) {
+  return apiRequest<DriverRideActionResponse>(`/rides/${rideId}/start`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function completeRide(token: string, rideId: number) {
+  return apiRequest<DriverRideActionResponse>(`/rides/${rideId}/complete`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
