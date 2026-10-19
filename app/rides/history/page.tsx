@@ -38,8 +38,6 @@ export default function RideHistoryPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  // Used by the refresh button and after a successful cancellation.
-  // This function is not called directly by the initial effect.
   const loadRides = useCallback(async () => {
     const token = sessionStorage.getItem("saarthiride_token");
 
@@ -66,7 +64,6 @@ export default function RideHistoryPage() {
     }
   }, []);
 
-  // Load ride history asynchronously on the first render.
   useEffect(() => {
     let isActive = true;
 
@@ -212,6 +209,13 @@ export default function RideHistoryPage() {
             className="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700"
           >
             Request a ride
+          </Link>
+
+          <Link
+            href="/rides/track"
+            className="rounded-xl border border-emerald-200 bg-white px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50"
+          >
+            Track rides
           </Link>
 
           <button
